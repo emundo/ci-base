@@ -24,7 +24,7 @@ RUN curl https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER}
 
 ## Docker Compose
 ARG DOCKER_COMPOSE=1.24.1
-RUN curl -L --fail https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE}/run.sh -o /usr/local/bin/docker-compose && \
+RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
     docker-compose -v
 
