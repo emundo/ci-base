@@ -16,15 +16,15 @@ RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
     && apt-get autoclean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-## Docker
-ARG DOCKER=18.09.3
+## Docker Binaries
+ARG DOCKER=19.03.2
 RUN curl https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER}.tgz > docker.tar.gz && tar xzvf docker.tar.gz -C /usr/local/bin/ --strip-components=1 && \
     rm docker.tar.gz && \
     docker -v
 
 ## Docker Compose
-ARG DOCKER_COMPOSE=1.23.2
-RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
+ARG DOCKER_COMPOSE=1.24.1
+RUN curl -L --fail https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE}/run.sh -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
     docker-compose -v
 
@@ -50,9 +50,9 @@ RUN addgroup --gid 1101 rancher && \
     # Für die AWS brauchen wir diese Gruppe
     useradd -ms /bin/bash emundo && \
     adduser emundo sudo && \
-    # Das ist notwendig, damit das Image in RancherOS funktioniert
+    # Das ist notwendig, damit Docker in Docker in RancherOS funktioniert
     usermod -aG 999 emundo && \
-    # Das ist notwendig, damit das Image in RancherOS funktioniert
+    # Das ist notwendig, damit Docker in Docker in AWS Ubuntu funktioniert
     usermod -aG 1101 emundo && \
-    # Das ist notwendig, damit das Image lokal funktioniert
+    # Das ist notwendig, damit Docker in Docker lokal funktioniert
     usermod -aG root emundo
