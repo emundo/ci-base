@@ -55,4 +55,4 @@ RUN addgroup --gid 1101 rancher && \
     # Das ist notwendig, damit Docker in Docker in AWS Ubuntu funktioniert
     usermod -aG 1101 emundo && \
     # Das ist notwendig, damit Docker in Docker lokal funktioniert
-    usermod -aG root emundo
+    usermod -aG sudo emundo
