@@ -1,6 +1,6 @@
-FROM ubuntu:rolling
+FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y wget apt-transport-https ca-certificates curl gnupg2 software-properties-common tar git openssl gzip unzip\
+RUN apt-get update && apt-get install -y wget apt-transport-https ca-certificates curl gnupg2 software-properties-common tar git openssl gzip unzip python3 python3-pip\
     && apt-get autoclean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
@@ -17,13 +17,13 @@ RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 ## Docker Binaries
-ARG DOCKER=19.03.2
+ARG DOCKER=19.03.5
 RUN curl https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER}.tgz > docker.tar.gz && tar xzvf docker.tar.gz -C /usr/local/bin/ --strip-components=1 && \
     rm docker.tar.gz && \
     docker -v
 
 ## Docker Compose
-ARG DOCKER_COMPOSE=1.24.1
+ARG DOCKER_COMPOSE=1.25.3
 RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
     docker-compose -v
@@ -31,6 +31,7 @@ RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE
 # Google Cloud CLI
 RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
     echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get update && apt-get install -y google-cloud-sdk \
     && apt-get autoclean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
@@ -39,6 +40,15 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
 RUN curl -L https://github.com/rancher/rancher-compose/releases/download/v0.12.5/rancher-compose-linux-amd64-v0.12.5.tar.xz | tar xJvf -  --strip-components=2 -C /usr/local/bin/ && \
     chmod +x /usr/local/bin/rancher-compose && \
     rancher-compose --version
+
+## AWS CLI
+RUN pip3 install awscli --upgrade && \
+    aws --version
+
+## AWS EKS Ctl
+RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
+    mv /tmp/eksctl /usr/local/bin && \
+    eksctl version
 
 # Standard Encoding von ASCII auf UTF-8 stellen
 ENV LANG C.UTF-8
