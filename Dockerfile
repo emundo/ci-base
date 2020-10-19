@@ -7,9 +7,8 @@ RUN apt-get update && apt-get install -y wget apt-transport-https ca-certificate
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 ## Helm Tiller
-RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash && \
-    helm version --client && \
-    tiller -version
+RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash && \
+    helm version --client
 
 ## Kubectl
 RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
