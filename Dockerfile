@@ -18,7 +18,7 @@ RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add 
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 ## Docker Binaries
-ARG DOCKER=19.03.13
+ARG DOCKER=20.10.5
 RUN curl https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER}.tgz > docker.tar.gz && tar xzvf docker.tar.gz -C /usr/local/bin/ --strip-components=1 && \
     rm docker.tar.gz && \
     docker -v
