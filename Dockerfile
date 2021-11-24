@@ -32,9 +32,7 @@ RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE
 # Google Cloud CLI
 RUN echo "deb http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-    apt-get update && apt-get install -y google-cloud-sdk \
-    && apt-get autoclean \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+    apt-get update && apt-get install -y google-cloud-sdk
 
 ## AWS CLI
 RUN pip3 install awscli --upgrade && \
@@ -44,6 +42,11 @@ RUN pip3 install awscli --upgrade && \
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/local/bin && \
     eksctl version
+
+## AWS ECR credential helper
+RUN apt-get install -y amazon-ecr-credential-helper && \
+    docker-credential-ecr-login -v && \
+    apt-get autoclean && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Standard Encoding von ASCII auf UTF-8 stellen
 ENV LANG C.UTF-8
