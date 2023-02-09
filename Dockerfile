@@ -1,4 +1,4 @@
-FROM ubuntu:rolling
+FROM ubuntu:jammy
 
 ENV DEBIAN_FRONTEND=noninteractive
 
